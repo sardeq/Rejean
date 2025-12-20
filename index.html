@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReJean Prototype</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- GLOBAL VARIABLES & RESET --- */
+        :root {
+            --primary-green: #3ACE3A;
+            --gradient-green: linear-gradient(135deg, #4ce035 0%, #2da823 100%);
+            --primary-blue: #0066FF;
+            --bg-gray: #f2f2f7;
+            --text-dark: #1c1c1e;
+            --text-gray: #8e8e93;
+            --white: #ffffff;
+            --phone-width: 375px;
+            --phone-height: 812px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- PHONE FRAME --- */
+        .phone-frame {
+            width: var(--phone-width);
+            height: var(--phone-height);
+            background-color: var(--white);
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 12px #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Notch simulation */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background-color: #1a1a1a;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 100;
+        }
+
+        /* --- SCREEN CONTAINER --- */
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background-color: var(--white);
+            padding-bottom: 80px; /* Space for bottom nav */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Hide scrollbar */
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            padding: 50px 20px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+        
+        .logo span {
+            color: var(--primary-blue);
+        }
+
+        .header-icons i {
+            font-size: 20px;
+            color: var(--primary-green);
+            margin-left: 15px;
+        }
+        
+        .avatar {
+            width: 30px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* --- COMPONENTS --- */
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 16px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Impact Card (Home) */
+        .impact-card {
+            background: var(--gradient-green);
+            margin: 20px;
+            padding: 25px;
+            border-radius: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(58, 206, 58, 0.3);
+        }
+
+        .impact-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .impact-card p {
+            font-size: 14px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .impact-stats {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .badge {
+            background-color: #FFC107; /* Amber color */
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .globe-icon {
+            font-size: 60px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.8;
+            color: #81C784; 
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 20px;
+            color: var(--text-dark);
+        }
+
+        /* List Items */
+        .list-card {
+            background-color: #f0f0f0;
+            margin: 0 20px 15px;
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .list-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--white);
+            border-radius: 50%; /* Circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary-blue);
+        }
+        
+        .list-icon.circle-check {
+             background-color: #e8f5e9;
+             color: var(--primary-green);
+        }
+
+        .list-details h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .list-details span {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* --- MAP SCREEN --- */
+        .map-bg {
+            flex-grow: 1;
+            /* Placeholder map pattern */
+            background-color: #e5e5e5;
+            background-image: 
+                linear-gradient(#dcdcdc 2px, transparent 2px),
+                linear-gradient(90deg, #dcdcdc 2px, transparent 2px);
+            background-size: 40px 40px;
+            position: relative;
+        }
+        
+        /* Simulating a map pin */
+        .map-pin {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: #ea4335;
+            text-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .map-overlay {
+            background: white;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            /* FIXED: Added bottom padding so content clears the nav bar */
+            padding: 20px 20px 90px 20px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .search-bar {
+            background: #e0e0e0;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #555;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            margin: -20px -20px 20px -20px;
+        }
+
+        .location-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eee;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .loc-icon {
+            color: var(--primary-green);
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        /* --- FORM SCREEN --- */
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 50px 20px 10px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .input-group {
+            margin: 10px 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px; /* Rounded pill inputs */
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Items Grid */
+        .items-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 20px;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .items-container::-webkit-scrollbar {
+             display: none;
+        }
+
+        .item-card {
+            min-width: 110px;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f0f0f0;
+            margin-bottom: 10px;
+        }
+
+        .counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .counter-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-blue);
+            color: white;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Order History List */
+        .history-card {
+            background-color: #d1d1d6; /* Darker gray background */
+            margin: 0 20px 15px;
+            border-radius: 15px;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .history-date {
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .history-content {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-circle-blue {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 24px;
+        }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #eee;
+            z-index: 20;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-gray);
+            font-size: 10px;
+            cursor: pointer;
+            width: 25%;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-green);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <div class="notch"></div>
+
+        <div id="home-screen" class="screen">
+            <div class="header">
+                <div class="logo">Re<span>Jean</span></div>
+                <div class="header-icons">
+                    <i class="fa-solid fa-bell"></i>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+
+            <div class="impact-card">
+                <h2>Congratulations!<br>You made an impact!</h2>
+                <p>You have saved 3KG of Textiles from landfills.</p>
+                <p style="font-size: 12px; margin-top: 5px;">That's 8% of the 64% saved!</p>
+                
+                <div class="impact-stats">
+                    <div class="badge">
+                        <i class="fa-solid fa-star"></i> Points: 300
+                    </div>
+                </div>
+                <i class="fa-solid fa-earth-africa globe-icon"></i>
+            </div>
+
+            <div style="padding: 0 20px;">
+                <button class="btn-primary" onclick="navigateTo('map-screen'); setActiveNav('nav-donate')">Schedule a Pickup</button>
+            </div>
+
+            <h3 class="section-title">Recent Activity</h3>
+
+            <div class="list-card">
+                <div class="list-icon circle-check">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div class="list-details">
+                    <h4>Last Pickup</h4>
+                    <span>Oct 20 - Completed</span>
+                </div>
+                <div style="margin-left: auto; color: var(--primary-green);">
+                    <i class="fa-solid fa-circle-check" style="font-size: 24px;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div id="map-screen" class="screen active">
+            <div class="header" style="background:transparent; position:absolute; width:100%;">
+                <div class="logo">Re<span>Jean</span></div>
+                <div class="header-icons">
+                    <i class="fa-solid fa-bell"></i>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+
+            <div class="map-bg">
+                <i class="fa-solid fa-location-dot map-pin"></i>
+            </div>
+
+            <div class="map-overlay">
+                <div class="search-bar">Search</div>
+                
+                <div class="location-item">
+                    <div style="display:flex; align-items:center;">
+                        <i class="fa-solid fa-clock-rotate-left loc-icon"></i>
+                        <div>
+                            <h4 style="font-size:14px;">Home</h4>
+                            <span style="font-size:12px; color:#777;">Amman, Bayader</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-heart" style="color:#ff5252;"></i>
+                </div>
+
+                <button class="btn-primary" style="margin-top:0;" onclick="navigateTo('form-screen')">Next</button>
+            </div>
+        </div>
+
+        <div id="form-screen" class="screen">
+            <div class="form-header">
+                <i class="fa-solid fa-arrow-left back-btn" onclick="navigateTo('map-screen'); setActiveNav('nav-donate')"></i>
+                <div>
+                    <h3 style="font-size:16px;">Bayader 12</h3>
+                    <span style="font-size:12px; color:#777;">Amman</span>
+                </div>
+            </div>
+
+            <h4 class="section-title" style="margin: 10px 20px; font-size:14px;">Contact Information</h4>
+            <div class="input-group">
+                <label>Name:</label>
+                <input type="text" class="input-field" value="Sardeq" readonly>
+            </div>
+            <div class="input-group">
+                <label>Phone Number:</label>
+                <input type="text" class="input-field" value="+962 79 000 0000" readonly>
+            </div>
+
+            <h4 class="section-title" style="margin: 10px 20px; font-size:14px;">Items</h4>
+            <div class="items-container">
+                <div class="item-card">
+                    <img src="https://via.placeholder.com/80/4682B4/FFFFFF?text=Jeans" class="item-img" alt="Jeans">
+                    <div class="counter">
+                        <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
+                        <span style="font-weight:bold;">1</span>
+                        <button class="counter-btn" onclick="updateCount(this, 1)">+</button>
+                    </div>
+                    <span style="font-size:10px; display:block; margin-top:5px;">Notes</span>
+                </div>
+                <div class="item-card">
+                    <img src="https://via.placeholder.com/80/FFFFFF/000000?text=Shirt" class="item-img" alt="Shirt">
+                    <div class="counter">
+                        <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
+                        <span style="font-weight:bold;">1</span>
+                        <button class="counter-btn" onclick="updateCount(this, 1)">+</button>
+                    </div>
+                    <span style="font-size:10px; display:block; margin-top:5px;">Notes</span>
+                </div>
+                 <div class="item-card">
+                    <img src="https://via.placeholder.com/80/808080/FFFFFF?text=Blanket" class="item-img" alt="Blanket">
+                    <div class="counter">
+                        <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
+                        <span style="font-weight:bold;">1</span>
+                        <button class="counter-btn" onclick="updateCount(this, 1)">+</button>
+                    </div>
+                    <span style="font-size:10px; display:block; margin-top:5px;">Notes</span>
+                </div>
+            </div>
+
+            <h4 class="section-title" style="margin: 10px 20px; font-size:14px;">Delivery Details</h4>
+            
+            <div class="input-group" style="display:flex; align-items:center;">
+                <label style="width:80px;">Location</label>
+                <input type="text" class="input-field" value="Amman, Bayader" style="flex:1;">
+            </div>
+
+            <div style="display:flex; padding:0 20px;">
+                <div style="margin-right:10px; flex:1;">
+                    <div style="display:flex; align-items:center; margin-bottom:10px;">
+                        <label style="width:40px; font-size:13px;">Date</label>
+                        <input type="text" class="input-field" value="Oct 21" style="flex:1;">
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <label style="width:40px; font-size:13px;">Floor</label>
+                        <input type="text" class="input-field" value="2" style="flex:1;">
+                    </div>
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; margin-bottom:10px;">
+                        <label style="width:40px; font-size:13px;">Time</label>
+                        <input type="text" class="input-field" value="10:00 AM" style="flex:1;">
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <label style="width:60px; font-size:12px;">Apt Num</label>
+                        <input type="text" class="input-field" value="12" style="flex:1;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 20px;">
+                <button class="btn-primary" onclick="navigateTo('orders-screen'); setActiveNav('nav-orders')">Confirm</button>
+            </div>
+
+        </div>
+
+        <div id="orders-screen" class="screen">
+            <div class="header" style="border-bottom:none;">
+                <h2 style="font-size:20px;">Order History</h2>
+            </div>
+
+            <div class="history-card">
+                <div class="history-date">Wednesday, 29 Oct</div>
+                <div class="history-content">
+                    <div class="icon-circle-blue">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:16px;">Pick up from Home</h4>
+                        <span style="font-size:12px; color:#555;">Jeans x5, Blanket x2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-card">
+                <div class="history-date">Wednesday, 29 Oct</div>
+                <div class="history-content">
+                    <div class="icon-circle-blue">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:16px;">Pick up from Home</h4>
+                        <span style="font-size:12px; color:#555;">Jeans x5, Blanket x2</span>
+                    </div>
+                </div>
+            </div>
+
+             <div class="history-card">
+                <div class="history-date">Wednesday, 29 Oct</div>
+                <div class="history-content">
+                    <div class="icon-circle-blue">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:16px;">Pick up from Home</h4>
+                        <span style="font-size:12px; color:#555;">Jeans x5, Blanket x2</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" id="nav-home" onclick="navigateTo('home-screen'); setActiveNav('nav-home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item active" id="nav-donate" onclick="navigateTo('map-screen'); setActiveNav('nav-donate')">
+                <i class="fa-solid fa-recycle"></i>
+                <span>Donate</span>
+            </div>
+            <div class="nav-item" id="nav-orders" onclick="navigateTo('orders-screen'); setActiveNav('nav-orders')">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Orders</span>
+            </div>
+            <div class="nav-item" id="nav-settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple Navigation Logic
+        function navigateTo(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+
+            // Show target screen
+            document.getElementById(screenId).classList.add('active');
+
+            // Handle bottom nav visibility
+            const nav = document.querySelector('.bottom-nav');
+            if(screenId === 'form-screen') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+            }
+        }
+
+        // Set Active Nav Icon
+        function setActiveNav(navId) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            const target = document.getElementById(navId);
+            if(target) target.classList.add('active');
+        }
+
+        // Item Counter Logic
+        function updateCount(btn, change) {
+            const counterSpan = btn.parentElement.querySelector('span');
+            let count = parseInt(counterSpan.innerText);
+            count += change;
+            if (count < 1) count = 1; // Minimum 1
+            counterSpan.innerText = count;
+        }
+    </script>
+
+</body>
+</html>
