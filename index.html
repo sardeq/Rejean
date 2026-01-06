@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReJean Modern</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL VARIABLES & RESET --- */
@@ -13,7 +13,7 @@
             --primary-green: #3ACE3A;
             --dark-green: #2da823;
             --primary-blue: #2E5CFF;
-            --accent-jeans: #4a90e2; /* Denim color */
+            --accent-jeans: #4a90e2; 
             --bg-body: #e0e0e0;
             --bg-app: #F8F9FE;
             --surface: #ffffff;
@@ -30,7 +30,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif; /* Modern Font */
+            font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -71,14 +71,15 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
-            background-color: var(--bg-app);
             padding-bottom: 90px;
-            display: none;
+            display: none; 
             flex-direction: column;
-            /* Creative Background Pattern */
+            background-color: #F8F9FE; 
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(46, 92, 255, 0.03) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(58, 206, 58, 0.03) 0%, transparent 20%);
+                radial-gradient(circle at 50% 0%, rgba(46, 92, 255, 0.08) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(46, 92, 255, 0.03) 10px, rgba(46, 92, 255, 0.03) 11px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(46, 92, 255, 0.03) 10px, rgba(46, 92, 255, 0.03) 11px);
+            position: relative;
         }
 
         .screen.active {
@@ -117,6 +118,7 @@
             border-radius: 50%;
             border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-size: cover;
         }
 
         /* --- BUTTONS --- */
@@ -132,21 +134,34 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(46, 92, 255, 0.25);
             transition: transform 0.1s;
+            position: relative;
+            z-index: 2;
         }
         
         .btn-primary:active { transform: scale(0.98); }
 
-        /* --- HOME SCREEN --- */
-        /* Decorative circle behind header */
-        .deco-circle {
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* --- HOME SCREEN SPECIFIC --- */
+        .denim-bg-decoration {
             position: absolute;
-            top: -100px;
-            right: -50px;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(58,206,58,0.1) 0%, transparent 70%);
-            border-radius: 50%;
+            bottom: -80px; left: -120px;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, rgba(46, 92, 255, 0.05), rgba(46, 92, 255, 0.15));
+            border-radius: 40%;
+            transform: rotate(25deg);
+            z-index: 0;
             pointer-events: none;
+            border: 2px dashed rgba(46, 92, 255, 0.2);
+            box-shadow: inset 0 0 20px rgba(46, 92, 255, 0.05);
         }
 
         .impact-card {
@@ -158,9 +173,9 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 15px 30px -5px rgba(52, 199, 89, 0.4);
+            z-index: 2;
         }
 
-        /* Denim texture overlay effect */
         .impact-card::before {
             content: '';
             position: absolute;
@@ -192,10 +207,8 @@
         .globe-icon {
             font-size: 80px;
             position: absolute;
-            bottom: -15px;
-            right: -10px;
-            opacity: 0.2;
-            color: white;
+            bottom: -15px; right: -10px;
+            opacity: 0.2; color: white;
             z-index: 1;
         }
 
@@ -204,6 +217,7 @@
             font-weight: 700;
             margin: 20px 24px 15px;
             color: var(--text-main);
+            position: relative; z-index: 2;
         }
 
         .activity-card {
@@ -215,26 +229,151 @@
             align-items: center;
             gap: 15px;
             box-shadow: var(--shadow-card);
+            position: relative; z-index: 2;
         }
 
         .icon-box {
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 20px;
         }
         
         .icon-box.green { background: #E8F5E9; color: var(--primary-green); }
         .icon-box.blue { background: #E3F2FD; color: var(--primary-blue); }
+        .icon-box.gray { background: #F3F4F6; color: var(--text-main); }
+        .icon-box.purple { background: #F3E8FF; color: #9333EA; }
+
+        .points-wallet {
+            background: #E8F5E9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 2px 8px rgba(58, 206, 58, 0.2);
+        }
+
+        .category-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 24px 25px;
+            scrollbar-width: none;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-pill {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .cat-pill.active {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 8px 15px rgba(46, 92, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .shop-banner {
+            margin: 10px 24px 25px;
+            background: linear-gradient(135deg, #1E293B 0%, #0f172a 100%);
+            padding: 24px;
+            padding-top: 48px;
+            padding-bottom: 48px;
+            border-radius: 24px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px -5px rgba(30, 41, 59, 0.3);
+        }
+
+        .shop-banner h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+        .shop-banner p { font-size: 13px; opacity: 0.8; margin-bottom: 12px; }
+        
+        .shop-banner::after {
+            content: '';
+            position: absolute;
+            right: -20px; bottom: -20px;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        .shop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 0 24px 100px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.2s;
+            height: 100%;
+        }
+
+        .product-card:active { transform: scale(0.98); }
+
+        .product-img-box {
+            height: 110px;
+            background: #F3F4F6;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            transition: all 0.3s;
+        }
+
+        .price-tag {
+            background: #DCFCE7;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 8px;
+            align-self: flex-start;
+            display: inline-block;
+        }
+
+        .redeem-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: auto;
+            box-shadow: 0 4px 10px rgba(46, 92, 255, 0.2);
+        }
 
         /* --- MAP SCREEN --- */
         .map-bg {
             flex-grow: 1;
             background-color: #E5E9F2;
-            /* Modern dot pattern */
             background-image: radial-gradient(#CCD1E0 2px, transparent 2px);
             background-size: 24px 24px;
             position: relative;
@@ -337,7 +476,6 @@
         
         .modern-input:focus { background: #EBEFFF; color: var(--primary-blue); }
 
-        /* Modern Grid for Items - Solves scrolling issue */
         .items-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -355,7 +493,6 @@
             transition: all 0.2s;
         }
         
-        /* Highlight active item */
         .item-card:hover { border-color: var(--primary-blue); }
 
         .item-img {
@@ -438,6 +575,78 @@
         .status-badge.completed { background: #DCFCE7; color: #166534; }
         .status-badge.pending { background: #FEF3C7; color: #B45309; }
 
+        /* --- SETTINGS SCREEN --- */
+        .settings-header-card {
+            background: white;
+            padding: 24px;
+            margin: 10px 24px 24px;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+        }
+
+        .profile-pic-large {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 4px solid #f0f0f0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 16px 20px;
+            margin: 0 24px 12px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            transition: 0.2s;
+        }
+        .setting-item:active { transform: scale(0.98); background: #fafafa; }
+        
+        .setting-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        /* --- WELCOME & ONBOARDING --- */
+        .welcome-content {
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .onboarding-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .step-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0 40px;
+        }
+        .step-dot {
+            width: 8px; height: 8px;
+            background: #ddd;
+            border-radius: 50%;
+        }
+        .step-dot.active { background: var(--primary-blue); width: 20px; border-radius: 4px; }
+
         /* --- BOTTOM NAV --- */
         .bottom-nav {
             position: absolute;
@@ -446,7 +655,7 @@
             height: 80px;
             background: var(--surface);
             display: flex;
-            justify-content: space-around;
+            justify-content: space-around; /* Adjusted for 5 items */
             align-items: center;
             padding-bottom: 10px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
@@ -459,19 +668,19 @@
             flex-direction: column;
             align-items: center;
             color: #C7C7CC;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             cursor: pointer;
             gap: 5px;
             transition: color 0.2s;
+            width: 18%; /* Adjusted width */
         }
 
-        .nav-item i { font-size: 22px; transition: transform 0.2s; }
+        .nav-item i { font-size: 20px; transition: transform 0.2s; }
 
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active i { transform: translateY(-2px); }
 
-        /* Utility */
         .text-blue { color: var(--primary-blue); }
 
     </style>
@@ -481,13 +690,100 @@
     <div class="phone-frame">
         <div class="notch"></div>
 
-        <div id="home-screen" class="screen active">
-            <div class="deco-circle"></div>
+        <div id="welcome-screen" class="screen active">
+            <div class="denim-bg-decoration" style="top: -100px; transform: rotate(180deg);"></div>
+            <div class="welcome-content">
+                <div style="margin-bottom: 30px;">
+                    <i class="fa-solid fa-recycle" style="font-size: 60px; color: var(--primary-green);"></i>
+                </div>
+                <h1 class="onboarding-title">Welcome to<br>Re<span class="text-blue">Jean</span></h1>
+                <p style="color: var(--text-light); line-height: 1.6; margin-bottom: 40px;">
+                    Join the denim revolution. Recycle your old jeans, earn rewards, and help the planet.
+                </p>
+                <button class="btn-primary" onclick="navigateTo('signup-screen')">Get Started</button>
+                <button class="btn-text">I already have an account</button>
+            </div>
+        </div>
+
+        <div id="signup-screen" class="screen">
+            <div class="form-header">
+                <div class="back-btn" onclick="navigateTo('welcome-screen')">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </div>
+            </div>
+            <div style="padding: 0 24px;">
+                <h2 class="onboarding-title">Create Account</h2>
+                <div class="step-progress">
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                </div>
+
+                <div class="modern-input-group">
+                    <label>Full Name</label>
+                    <input type="text" class="modern-input" placeholder="e.g. Sardeq Odeh">
+                </div>
+                <div class="modern-input-group">
+                    <label>Email Address</label>
+                    <input type="email" class="modern-input" placeholder="hello@example.com">
+                </div>
+                <div class="modern-input-group">
+                    <label>Password</label>
+                    <input type="password" class="modern-input" placeholder="••••••••">
+                </div>
+
+                <button class="btn-primary" style="margin-top: 20px;" onclick="navigateTo('setup-screen')">Next</button>
+            </div>
+        </div>
+
+        <div id="setup-screen" class="screen">
+            <div class="form-header">
+                <div class="back-btn" onclick="navigateTo('signup-screen')">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </div>
+            </div>
+            <div style="padding: 0 24px;">
+                <h2 class="onboarding-title">Complete Profile</h2>
+                <div class="step-progress">
+                    <div class="step-dot"></div>
+                    <div class="step-dot active"></div>
+                </div>
+                
+                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">
+                    We need this to schedule your pickups.
+                </p>
+
+                <div class="modern-input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="modern-input" placeholder="+962 79 ...">
+                </div>
+                
+                <div class="modern-input-group">
+                    <label>City / Area</label>
+                    <div style="position: relative;">
+                        <input type="text" class="modern-input" value="Amman" readonly>
+                        <i class="fa-solid fa-chevron-down" style="position: absolute; right: 15px; top: 15px; font-size: 12px; color: #aaa;"></i>
+                    </div>
+                </div>
+
+                <div class="modern-input-group">
+                    <label>Default Address</label>
+                    <input type="text" class="modern-input" placeholder="Street name, building...">
+                </div>
+
+                <button class="btn-primary" style="margin-top: 20px;" onclick="navigateTo('home-screen')">Complete Sign Up</button>
+            </div>
+        </div>
+
+        <div id="home-screen" class="screen">
+            <div class="denim-bg-decoration"></div>
+
+            <div class="deco-circle" style="position: absolute; top: -100px; right: -50px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(58,206,58,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+            
             <div class="header">
                 <div class="logo">Re<span class="blue">Jean</span></div>
                 <div class="header-icons">
                     <i class="fa-regular fa-bell"></i>
-                    <div class="avatar"></div>
+                    <div class="avatar" onclick="navigateTo('settings-screen'); setActiveNav('nav-settings')"></div>
                 </div>
             </div>
 
@@ -533,11 +829,91 @@
             </div>
         </div>
 
+        <div id="shop-screen" class="screen">
+            <div class="header">
+                <div class="logo">Re<span class="blue">Store</span></div>
+                <div class="points-wallet">
+                    <i class="fa-solid fa-star" style="color:#FFD700"></i> 300
+                </div>
+            </div>
+
+            <div class="shop-banner">
+                <div style="z-index: 2; position: relative;">
+                    <h2>Weekly Deal</h2>
+                    <p>50% off Eco-friendly items</p>
+                    <div style="font-size:11px; background:rgba(255,255,255,0.15); backdrop-filter: blur(5px); width:fit-content; padding:6px 10px; border-radius:8px; font-weight: 600;">
+                        <i class="fa-regular fa-clock" style="margin-right:4px;"></i> ENDS IN 2D
+                    </div>
+                </div>
+                <i class="fa-solid fa-bag-shopping" style="font-size:120px; position: absolute; right: -20px; bottom: -30px; opacity:0.1; transform: rotate(-15deg);"></i>
+            </div>
+
+            <div class="category-scroll">
+                <div class="cat-pill active">All</div>
+                <div class="cat-pill">Fashion</div>
+                <div class="cat-pill">Food</div>
+                <div class="cat-pill">Donations</div>
+            </div>
+
+            <h3 class="section-title" style="margin-top:0;">Featured Rewards</h3>
+
+            <div class="shop-grid">
+                
+                <div class="product-card">
+                    <div class="product-img-box" style="background:#FEF2F2; color:#EF4444;">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="price-tag">150 Pts</div>
+                        <h4 style="font-size:14px; font-weight:700; margin-top:8px; color: var(--text-main);">20% Off H&M</h4>
+                        <p style="font-size:11px; color:var(--text-light); margin-top: 4px; line-height: 1.4;">Valid on recycling drop-offs</p>
+                    </div>
+                    <button class="redeem-btn" onclick="alert('Redeemed!')">Redeem</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img-box" style="background:#ECFDF5; color:#10B981;">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="price-tag">50 Pts</div>
+                        <h4 style="font-size:14px; font-weight:700; margin-top:8px; color: var(--text-main);">Free Coffee</h4>
+                        <p style="font-size:11px; color:var(--text-light); margin-top: 4px; line-height: 1.4;">Local Brew House</p>
+                    </div>
+                    <button class="redeem-btn" onclick="alert('Redeemed!')">Redeem</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img-box" style="background:#EFF6FF; color:#3B82F6;">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="price-tag">200 Pts</div>
+                        <h4 style="font-size:14px; font-weight:700; margin-top:8px; color: var(--text-main);">Denim Tote</h4>
+                        <p style="font-size:11px; color:var(--text-light); margin-top: 4px; line-height: 1.4;">100% Recycled Jeans</p>
+                    </div>
+                    <button class="redeem-btn" onclick="alert('Redeemed!')">Redeem</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img-box" style="background:#FFF7ED; color:#F59E0B;">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="price-tag">100 Pts</div>
+                        <h4 style="font-size:14px; font-weight:700; margin-top:8px; color: var(--text-main);">Plant a Tree</h4>
+                        <p style="font-size:11px; color:var(--text-light); margin-top: 4px; line-height: 1.4;">Donation to GreenEarth</p>
+                    </div>
+                    <button class="redeem-btn" style="background:var(--text-main);" onclick="alert('Donated!')">Donate</button>
+                </div>
+
+            </div>
+        </div>
+        
         <div id="map-screen" class="screen">
             <div class="header" style="position:absolute; width:100%;">
                 <div class="logo">Re<span class="blue">Jean</span></div>
-                <div class="header-icons">
-                     </div>
+                <div class="header-icons"></div>
             </div>
 
             <div class="map-bg">
@@ -593,7 +969,9 @@
             <h4 class="section-title" style="margin: 10px 24px;">What are you donating?</h4>
             <div class="items-grid">
                 <div class="item-card">
-                    <img src="jeans.jpeg" class="item-img" alt="Jeans">
+                    <div class="item-img" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-socks" style="color:#999; font-size:24px;"></i>
+                    </div>
                     <h5 style="font-size:13px; margin-bottom:8px;">Jeans</h5>
                     <div class="counter-pill">
                         <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
@@ -602,7 +980,9 @@
                     </div>
                 </div>
                 <div class="item-card">
-                    <img src="shirt.jpeg" class="item-img" alt="Shirt">
+                    <div class="item-img" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-shirt" style="color:#999; font-size:24px;"></i>
+                    </div>
                     <h5 style="font-size:13px; margin-bottom:8px;">Shirts</h5>
                     <div class="counter-pill">
                         <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
@@ -611,7 +991,9 @@
                     </div>
                 </div>
                  <div class="item-card">
-                    <img src="blanket.jpeg" class="item-img" alt="Blanket">
+                    <div class="item-img" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-rug" style="color:#999; font-size:24px;"></i>
+                    </div>
                     <h5 style="font-size:13px; margin-bottom:8px;">Blankets</h5>
                     <div class="counter-pill">
                         <button class="counter-btn" onclick="updateCount(this, -1)">-</button>
@@ -709,24 +1091,92 @@
                     </div>
                     <div class="status-badge" style="background:#eee; color:#555">Archived</div>
                 </div>
-
             </div>
         </div>
 
-        <div class="bottom-nav">
-            <div class="nav-item active" id="nav-home" onclick="navigateTo('home-screen'); setActiveNav('nav-home')">
+        <div id="settings-screen" class="screen">
+            <div class="header" style="padding-bottom:10px;">
+                <h2 style="font-size:24px; font-weight:800;">Settings</h2>
+            </div>
+
+            <div class="settings-header-card">
+                <div class="profile-pic-large"></div>
+                <h3 style="font-size:18px; margin-bottom:4px;">Sardeq Odeh</h3>
+                <span style="color:var(--text-light); font-size:13px;">sardeq@example.com</span>
+                <button class="btn-text" style="color:var(--primary-blue); font-size:13px; margin-top:10px;">Edit Profile</button>
+            </div>
+
+            <h4 class="section-title">General</h4>
+
+            <div class="setting-item">
+                <div class="setting-icon gray">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+                <div style="flex:1;">
+                    <h5 style="font-size:14px; margin-bottom:2px;">Notifications</h5>
+                    <span style="font-size:11px; color:var(--text-light);">On</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: #ccc; font-size:14px;"></i>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-icon gray">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <div style="flex:1;">
+                    <h5 style="font-size:14px; margin-bottom:2px;">Language</h5>
+                    <span style="font-size:11px; color:var(--text-light);">English</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: #ccc; font-size:14px;"></i>
+            </div>
+
+             <h4 class="section-title">Support</h4>
+
+            <div class="setting-item">
+                <div class="setting-icon purple">
+                    <i class="fa-regular fa-circle-question"></i>
+                </div>
+                <div style="flex:1;">
+                    <h5 style="font-size:14px; margin-bottom:2px;">Help Center</h5>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: #ccc; font-size:14px;"></i>
+            </div>
+
+            <div class="setting-item" onclick="navigateTo('welcome-screen')" style="margin-top:20px; cursor:pointer;">
+                <div class="setting-icon" style="background:#FEE2E2; color:#EF4444;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div style="flex:1;">
+                    <h5 style="font-size:14px; margin-bottom:2px; color:#EF4444;">Log Out</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav" style="display:none;"> <div class="nav-item active" id="nav-home" onclick="navigateTo('home-screen'); setActiveNav('nav-home')">
                 <i class="fa-solid fa-house"></i>
                 <span>Home</span>
             </div>
+            
+            <div class="nav-item" id="nav-shop" onclick="navigateTo('shop-screen'); setActiveNav('nav-shop')">
+                <i class="fa-solid fa-store"></i>
+                <span>Rewards</span>
+            </div>
+
             <div class="nav-item" id="nav-donate" onclick="navigateTo('map-screen'); setActiveNav('nav-donate')">
                 <div style="background:var(--primary-blue); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:-20px; box-shadow:0 8px 15px rgba(46,92,255,0.3); color:white;">
                      <i class="fa-solid fa-plus" style="font-size:20px; transform:none;"></i>
                 </div>
                 <span style="margin-top:5px; color:var(--primary-blue);">Donate</span>
             </div>
+
             <div class="nav-item" id="nav-orders" onclick="navigateTo('orders-screen'); setActiveNav('nav-orders')">
                 <i class="fa-solid fa-receipt"></i>
                 <span>Orders</span>
+            </div>
+
+            <div class="nav-item" id="nav-settings" onclick="navigateTo('settings-screen'); setActiveNav('nav-settings')">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
             </div>
         </div>
 
@@ -740,7 +1190,9 @@
             document.getElementById(screenId).classList.add('active');
 
             const nav = document.querySelector('.bottom-nav');
-            if(screenId === 'form-screen') {
+            
+            // Logic to hide Bottom Nav for Onboarding Screens and Forms
+            if(screenId === 'welcome-screen' || screenId === 'signup-screen' || screenId === 'setup-screen' || screenId === 'form-screen') {
                 nav.style.display = 'none';
             } else {
                 nav.style.display = 'flex';
@@ -763,6 +1215,15 @@
             if (count < 1) count = 1; 
             counterSpan.innerText = count;
         }
+
+        // Category Selection Logic (Visual Only)
+        const catPills = document.querySelectorAll('.cat-pill');
+        catPills.forEach(pill => {
+            pill.addEventListener('click', function() {
+                catPills.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
     </script>
 
 </body>
